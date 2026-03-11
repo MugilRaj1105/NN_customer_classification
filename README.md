@@ -129,15 +129,19 @@ print(f'Actual class for sample input: {label_encoder.inverse_transform([y_test[
 
 ### Confusion Matrix
 
-<img width="291" height="178" alt="image" src="https://github.com/user-attachments/assets/1abfad38-58c4-4b93-82de-61de42da0d9a" />
+
+<img width="277" height="177" alt="image" src="https://github.com/user-attachments/assets/e481e61b-03d7-4dc5-a9e1-ce9a0c4b52f9" />
 
 ### Classification Report
 
-<img width="608" height="246" alt="image" src="https://github.com/user-attachments/assets/0bef4a44-86ec-4d93-919b-d82450a62fae" />
+
+<img width="583" height="246" alt="image" src="https://github.com/user-attachments/assets/fc204993-fd17-4f66-8ea5-388d047bb2d2" />
+
 
 ### New Sample Data Prediction
 
-<img width="367" height="90" alt="image" src="https://github.com/user-attachments/assets/80ce0d4d-4975-488c-80a3-85262d50196d" />
+ <img width="385" height="100" alt="image" src="https://github.com/user-attachments/assets/12054743-1513-42e4-b59a-b92c94d0a29b" />
+
 
 
 ## RESULT
