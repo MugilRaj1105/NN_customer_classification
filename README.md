@@ -14,29 +14,31 @@ You are required to help the manager to predict the right group of the new custo
 
 ## Neural Network Model
 
-<img width="1209" height="799" alt="image" src="https://github.com/user-attachments/assets/67507eb2-b971-4e72-ad56-90438d5b2262" />
+<img width="951" height="956" alt="Screenshot 2026-02-16 111642" src="https://github.com/user-attachments/assets/b5def89f-2cc1-466d-8eef-59d38f49bca2" />
+
 
 ## DESIGN STEPS
 
-## STEP 1: Data Collection and Understanding
-Collect customer data from the existing market and identify the features that influence customer segmentation. Define the target variable as the customer segment (A, B, C, or D).
+### STEP 1:
+Load the dataset, clean it by handling missing values, drop irrelevant columns, encode categorical variables, and normalize features.
 
-## STEP 2: Data Preprocessing
-Remove irrelevant attributes, handle missing values, and encode categorical variables into numerical form. Split the dataset into training and testing sets.
-
-## STEP 3: Model Design and Training
-Design a neural network classification model with suitable input, hidden, and output layers. Train the model using the training data to learn patterns for customer segmentation.
-
-## STEP 4: Model Evaluation and Prediction
-Evaluate the trained model using test data and use it to predict the customer segment for new customers in the target market.
+### STEP 2:
+Split the data into training and testing sets.
+### STEP 3:
+Build a neural network model with multiple layers using PyTorch.
+### STEP 4:
+Train the model using CrossEntropyLoss and Adam optimizer.
+### STEP 5:
+Evaluate the model with accuracy, confusion matrix, and classification report.
+### STEP 6:
+Test the model with new sample data for prediction.
 
 ## PROGRAM
 
-### Name: KUKKADAPU CHARAN TEJ
-### Register Number: 212224040167
+### Name: MUGIL RAJ S A
+### Register Number: 212223220062
 
 ```python
-# Define Neural Network(Model1)
 class PeopleClassifier(nn.Module):
     def __init__(self, input_size):
         super(PeopleClassifier, self).__init__()
@@ -44,64 +46,99 @@ class PeopleClassifier(nn.Module):
         self.fc2 = nn.Linear(32, 16)
         self.fc3 = nn.Linear(16, 8)
         self.fc4 = nn.Linear(8, 4)
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)
-        return x
 
-        
+
+    def forward(self, x):
+         x=F.relu(self.fc1(x))
+        x=F.relu(self.fc2(x))
+        x=F.relu(self.fc3(x))
+        x=self.fc4(x)
+        return x
 
 ```
 ```python
 # Initialize the Model, Loss Function, and Optimizer
 model = PeopleClassifier(input_size=X_train.shape[1])
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(),lr=0.001)
-train_model(model, train_loader, criterion, optimizer, epochs=100)
-
-
+optimizer = optim.Adam(model.parameters(),lr=0.01)
 
 ```
 ```python
-#function to train the model
 def train_model(model, train_loader, criterion, optimizer, epochs):
+     for epoch in range(epochs):
     model.train()
-    for epoch in range(epochs):
-        for inputs, labels in train_loader:
-          optimizer.zero_grad()
-          outputs=model(inputs)
-          loss=criterion(outputs, labels)
-          loss.backward()
-          optimizer.step()
-    if (epoch + 1) % 10 == 0:
-        print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
+    for X_batch,y_batch in train_loader:
+      optimizer.zero_grad()
+      outputs=model(X_batch)
+      loss=criterion(outputs,y_batch)
+      loss.backward()
+      optimizer.step()
+
+  if(epoch+1)%10==0:
+    print(f'Epoch [{epoch+1}/{epochs}],Loss:{loss.item():.4f}')
+
+# Evaluation
+model.eval()
+predictions, actuals = [], []
+with torch.no_grad():
+    for X_batch, y_batch in test_loader:
+        outputs = model(X_batch)
+        _, predicted = torch.max(outputs, 1)
+        predictions.extend(predicted.numpy())
+        actuals.extend(y_batch.numpy())
+
+# Compute metrics
+accuracy = accuracy_score(actuals, predictions)
+conf_matrix = confusion_matrix(actuals, predictions)
+class_report = classification_report(actuals, predictions, target_names=[str(i) for i in label_encoder.classes_])
+print("Name: MUGIL RAJ S A")
+print("Register No: 212223220062")    
+print(f'Test Accuracy: {accuracy:.2f}%')
+print("Confusion Matrix:\n", conf_matrix)
+print("Classification Report:\n", class_report)
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.heatmap(conf_matrix, annot=True, cmap='Blues', xticklabels=label_encoder.classes_, yticklabels=label_encoder.classes_,fmt='g')
+plt.xlabel("Predicted Labels")
+plt.ylabel("True Labels")
+plt.title("Confusion Matrix")
+plt.show()
+
+# Prediction for a sample input
+sample_input = X_test[12].clone().unsqueeze(0).detach().type(torch.float32)
+with torch.no_grad():
+    output = model(sample_input)
+
+# Select the prediction for the sample (first element)
+predicted_class_index = torch.argmax(output[0]).item()
+predicted_class_label = label_encoder.inverse_transform([predicted_class_index])[0]
+print("Name: MUGIL RAJ S A")
+print("Register No: 212223220062")
+print(f'Predicted class for sample input: {predicted_class_label}')
+print(f'Actual class for sample input: {label_encoder.inverse_transform([y_test[12].item()])[0]}')
+
 ```
-
-
 
 ## Dataset Information
 
-<img width="1191" height="242" alt="image" src="https://github.com/user-attachments/assets/e36c0433-d3f0-494f-91d9-e621db7f076b" />
-
+<img width="1333" height="255" alt="image" src="https://github.com/user-attachments/assets/1d1268c4-0700-42bc-b0ac-0724e54801b4" />
 
 ## OUTPUT
-
-
+<img width="665" height="560" alt="image" src="https://github.com/user-attachments/assets/2bcdd70f-e048-425f-885d-bc0c6fac1b27" />
 
 ### Confusion Matrix
 
-<img width="649" height="551" alt="image" src="https://github.com/user-attachments/assets/0428c070-5e71-410f-9dca-d5903aabea73" />
+<img width="291" height="178" alt="image" src="https://github.com/user-attachments/assets/1abfad38-58c4-4b93-82de-61de42da0d9a" />
 
 ### Classification Report
 
-<img width="1211" height="648" alt="image" src="https://github.com/user-attachments/assets/4fb9e763-dca7-4287-9c5f-3530494d4c65" />
-
+<img width="608" height="246" alt="image" src="https://github.com/user-attachments/assets/0bef4a44-86ec-4d93-919b-d82450a62fae" />
 
 ### New Sample Data Prediction
 
-<img width="1608" height="173" alt="image" src="https://github.com/user-attachments/assets/6d86b099-4d7b-4bca-ad64-be5342f90011" />
+<img width="367" height="90" alt="image" src="https://github.com/user-attachments/assets/80ce0d4d-4975-488c-80a3-85262d50196d" />
+
 
 ## RESULT
-Thus neural network classification model is developded for the given dataset.
+The program to develop a neural network regression model for the given dataset has been successfully executed.
